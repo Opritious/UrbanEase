@@ -1,0 +1,935 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Eco Points - UrbanEase{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-success text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-leaf me-3"></i>Eco Points
+                </h1>
+                <p class="lead mb-4">
+                    Earn points for eco-friendly activities and redeem them for amazing rewards. 
+                    Make Kolkata greener while earning benefits!
+                </p>
+                <div class="d-flex gap-3">
+                    <button class="btn btn-warning btn-lg" onclick="showEarnPointsModal()">
+                        <i class="fas fa-plus me-2"></i>Earn Points
+                    </button>
+                    <button class="btn btn-outline-light btn-lg" onclick="showRewardsModal()">
+                        <i class="fas fa-gift me-2"></i>Redeem Rewards
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <img src="{% static 'images/eco-hero.svg' %}" alt="Eco Points" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Points Balance Section -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card shadow-sm text-center">
+                    <div class="card-body">
+                        <i class="fas fa-coins fa-3x text-success mb-3"></i>
+                        <h2 id="pointsBalance">0</h2>
+                        <p class="text-muted">Total Eco Points</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card shadow-sm text-center">
+                    <div class="card-body">
+                        <i class="fas fa-trophy fa-3x text-warning mb-3"></i>
+                        <h2 id="userRank">--</h2>
+                        <p class="text-muted">Monthly Rank</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card shadow-sm text-center">
+                    <div class="card-body">
+                        <i class="fas fa-medal fa-3x text-info mb-3"></i>
+                        <h2 id="badgeCount">0</h2>
+                        <p class="text-muted">Badges Earned</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How to Earn Points -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-star me-2 text-success"></i>How to Earn Eco Points
+        </h2>
+        
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-qrcode fa-2x text-success me-3"></i>
+                            <div>
+                                <h5>Scanning QR Code SmartBins ♻️</h5>
+                                <p class="text-muted mb-2">Earn 10 points</p>
+                                <button class="btn btn-sm btn-success" onclick="earnPoints('qr_scan')">
+                                    Earn Points
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-camera fa-2x text-warning me-3"></i>
+                            <div>
+                                <h5>Reporting Overflowing Bins 📸</h5>
+                                <p class="text-muted mb-2">Earn 20 points</p>
+                                <button class="btn btn-sm btn-warning" onclick="earnPoints('report_bin')">
+                                    Earn Points
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-bus fa-2x text-primary me-3"></i>
+                            <div>
+                                <h5>Using Public Transport 🚍</h5>
+                                <p class="text-muted mb-2">Earn 15 points</p>
+                                <button class="btn btn-sm btn-primary" onclick="earnPoints('public_transport')">
+                                    Earn Points
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-lightbulb fa-2x text-info me-3"></i>
+                            <div>
+                                <h5>Reporting Road Damage or Broken Streetlights 💡</h5>
+                                <p class="text-muted mb-2">Earn 30 points</p>
+                                <button class="btn btn-sm btn-info" onclick="earnPoints('report_damage')">
+                                    Earn Points
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-seedling fa-2x text-success me-3"></i>
+                            <div>
+                                <h5>Attending Plantation Drives 🌱</h5>
+                                <p class="text-muted mb-2">Earn 50 points</p>
+                                <button class="btn btn-sm btn-success" onclick="earnPoints('plantation')">
+                                    Earn Points
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-recycle fa-2x text-warning me-3"></i>
+                            <div>
+                                <h5>Recycling E-Waste (like phones/laptops) ♻️</h5>
+                                <p class="text-muted mb-2">Earn 40 points</p>
+                                <button class="btn btn-sm btn-warning" onclick="earnPoints('e_waste')">
+                                    Earn Points
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-car fa-2x text-primary me-3"></i>
+                            <div>
+                                <h5>Using Carpool Services 🚘</h5>
+                                <p class="text-muted mb-2">Earn 25 points</p>
+                                <button class="btn btn-sm btn-primary" onclick="earnPoints('carpool')">
+                                    Earn Points
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-user-md fa-2x text-info me-3"></i>
+                            <div>
+                                <h5>Booking a Telemedicine Appointment 🩺</h5>
+                                <p class="text-muted mb-2">Earn 10 points</p>
+                                <button class="btn btn-sm btn-info" onclick="earnPoints('telemedicine')">
+                                    Earn Points
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-walking fa-2x text-success me-3"></i>
+                            <div>
+                                <h5>Walking 10,000 Steps (via App Tracker) 🚶</h5>
+                                <p class="text-muted mb-2">Earn 20 points</p>
+                                <button class="btn btn-sm btn-success" onclick="earnPoints('walking')">
+                                    Earn Points
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Rewards Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-gift me-2 text-warning"></i>Where Can Citizens Use Eco Points
+        </h2>
+        
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5><i class="fas fa-bus me-2"></i>Transport</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Redeem points for discounts on Metro, Bus, or E-Scooter rides</p>
+                        <div class="alert alert-info">
+                            <strong>Example:</strong> 100 Points = 1 Free Metro Ride
+                        </div>
+                        <button class="btn btn-primary w-100" onclick="showRewardsByCategory('transport')">
+                            View Transport Rewards
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5><i class="fas fa-hospital me-2"></i>Healthcare</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Get free telemedicine consultations</p>
+                        <div class="alert alert-success">
+                            <strong>Example:</strong> 200 Points = 1 Doctor Consultation
+                        </div>
+                        <button class="btn btn-success w-100" onclick="showRewardsByCategory('healthcare')">
+                            View Healthcare Rewards
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-warning text-white">
+                        <h5><i class="fas fa-recycle me-2"></i>Waste Management</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Avail free garbage pickup at home</p>
+                        <div class="alert alert-warning">
+                            <strong>Example:</strong> 300 Points = 1 Free Trash Pickup
+                        </div>
+                        <button class="btn btn-warning w-100" onclick="showRewardsByCategory('waste_management')">
+                            View Waste Management Rewards
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-info text-white">
+                        <h5><i class="fas fa-bolt me-2"></i>Utility Bills</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Get cashback on electricity and water bills</p>
+                        <div class="alert alert-info">
+                            <strong>Example:</strong> 500 Points = ₹100 Cashback
+                        </div>
+                        <button class="btn btn-info w-100" onclick="showRewardsByCategory('utility_bills')">
+                            View Utility Rewards
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-secondary text-white">
+                        <h5><i class="fas fa-graduation-cap me-2"></i>Education</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Unlock free online course access</p>
+                        <div class="alert alert-secondary">
+                            <strong>Example:</strong> 400 Points = 1 Course
+                        </div>
+                        <button class="btn btn-secondary w-100" onclick="showRewardsByCategory('education')">
+                            View Education Rewards
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-danger text-white">
+                        <h5><i class="fas fa-shopping-bag me-2"></i>Shopping</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Get vouchers or discounts from partner brands</p>
+                        <div class="alert alert-danger">
+                            <strong>Example:</strong> 600 Points = ₹200 Discount
+                        </div>
+                        <button class="btn btn-danger w-100" onclick="showRewardsByCategory('shopping')">
+                            View Shopping Rewards
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Leaderboard Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-trophy me-2 text-warning"></i>Monthly Leaderboard
+        </h2>
+        
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-white">
+                <h5 class="mb-0">Top Eco Citizens</h5>
+            </div>
+            <div class="card-body">
+                <div id="leaderboardContainer">
+                    <div class="text-center">
+                        <div class="spinner-border text-warning" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading leaderboard...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Badges Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-medal me-2 text-info"></i>Your Badges
+        </h2>
+        
+        <div class="row" id="badgesContainer">
+            <div class="text-center w-100">
+                <div class="spinner-border text-info" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading badges...</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bonus Rewards Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-fire me-2 text-danger"></i>Bonus Rewards
+        </h2>
+        
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card shadow-sm text-center">
+                    <div class="card-body">
+                        <i class="fas fa-crown fa-3x text-warning mb-3"></i>
+                        <h5>🏅 Citizen of the Month Badge</h5>
+                        <p class="text-muted">Earned by the highest eco points scorer each month</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card shadow-sm text-center">
+                    <div class="card-body">
+                        <i class="fas fa-ticket-alt fa-3x text-primary mb-3"></i>
+                        <h5>🎟️ Free Public Transport Pass</h5>
+                        <p class="text-muted">1 month free pass for the monthly winner</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card shadow-sm text-center">
+                    <div class="card-body">
+                        <i class="fas fa-tree fa-3x text-success mb-3"></i>
+                        <h5>🌳 A Tree Planted in Their Name</h5>
+                        <p class="text-muted">Monthly winner gets a tree planted in their honor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Earn Points Modal -->
+<div class="modal fade" id="earnPointsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Earn Eco Points</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="earnPointsForm">
+                    <div class="mb-3">
+                        <label class="form-label">Activity Type</label>
+                        <select class="form-select" id="activityType" required>
+                            <option value="">Select an activity...</option>
+                            <option value="qr_scan">Scanning QR Code SmartBins</option>
+                            <option value="report_bin">Reporting Overflowing Bins</option>
+                            <option value="public_transport">Using Public Transport</option>
+                            <option value="report_damage">Reporting Road Damage or Broken Streetlights</option>
+                            <option value="plantation">Attending Plantation Drives</option>
+                            <option value="e_waste">Recycling E-Waste</option>
+                            <option value="carpool">Using Carpool Services</option>
+                            <option value="telemedicine">Booking a Telemedicine Appointment</option>
+                            <option value="walking">Walking 10,000 Steps</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-control" id="activityLocation" placeholder="Where did you perform this activity?">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" id="activityDescription" rows="3" placeholder="Describe your eco-friendly activity..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Evidence (Optional)</label>
+                        <input type="file" class="form-control" id="activityEvidence">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="submitEarnPoints()">
+                    <span class="spinner-border spinner-border-sm me-2 d-none" id="earnSpinner"></span>
+                    Earn Points
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rewards Modal -->
+<div class="modal fade" id="rewardsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Redeem Rewards</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="rewardsContainer">
+                    <div class="text-center">
+                        <div class="spinner-border text-warning" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading rewards...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Global variables
+let currentPoints = 0;
+let currentRewards = [];
+
+// Load user data on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadUserData();
+    loadLeaderboard();
+    loadBadges();
+});
+
+// Load user's eco points data
+async function loadUserData() {
+    try {
+        // Demo data since we removed the backend eco-points system
+        currentPoints = 150;
+        document.getElementById('pointsBalance').textContent = currentPoints;
+        document.getElementById('userRank').textContent = '5th';
+        document.getElementById('badgeCount').textContent = '3';
+        
+    } catch (error) {
+        console.error('Error loading user data:', error);
+    }
+}
+
+// Load leaderboard
+async function loadLeaderboard() {
+    try {
+        // Demo leaderboard data
+        const demoData = [
+            { user: 'EcoWarrior', points_earned: 450 },
+            { user: 'GreenCitizen', points_earned: 380 },
+            { user: 'SustainableSam', points_earned: 320 },
+            { user: 'EcoHero', points_earned: 290 },
+            { user: 'GreenGuru', points_earned: 250 }
+        ];
+        
+        let html = '';
+        demoData.forEach((entry, index) => {
+            const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+            html += `
+                <div class="d-flex justify-content-between align-items-center p-2 border-bottom">
+                    <div class="d-flex align-items-center">
+                        <span class="me-3">${medal}</span>
+                        <strong>${entry.user}</strong>
+                    </div>
+                    <span class="badge bg-warning">${entry.points_earned} points</span>
+                </div>
+            `;
+        });
+        
+        document.getElementById('leaderboardContainer').innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading leaderboard:', error);
+        document.getElementById('leaderboardContainer').innerHTML = '<p class="text-muted text-center">Unable to load leaderboard</p>';
+    }
+}
+
+// Load user badges
+async function loadBadges() {
+    try {
+        // Demo badges data
+        const demoBadges = [
+            { badge_name: 'First Activity', badge_icon: 'fas fa-star', earned_date: '2024-01-15' },
+            { badge_name: '100 Points Milestone', badge_icon: 'fas fa-trophy', earned_date: '2024-01-20' },
+            { badge_name: 'Activity Streak', badge_icon: 'fas fa-fire', earned_date: '2024-01-25' }
+        ];
+        
+        let html = '';
+        demoBadges.forEach(badge => {
+            html += `
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                    <div class="card shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="${badge.badge_icon} fa-2x text-warning mb-2"></i>
+                            <h6>${badge.badge_name}</h6>
+                            <small class="text-muted">Earned ${new Date(badge.earned_date).toLocaleDateString()}</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        document.getElementById('badgesContainer').innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading badges:', error);
+        document.getElementById('badgesContainer').innerHTML = '<div class="col-12 text-center"><p class="text-muted">Unable to load badges</p></div>';
+    }
+}
+
+// Show earn points modal
+function showEarnPointsModal() {
+    const modal = new bootstrap.Modal(document.getElementById('earnPointsModal'));
+    modal.show();
+}
+
+// Submit earn points form
+async function submitEarnPoints() {
+    const activityType = document.getElementById('activityType').value;
+    const location = document.getElementById('activityLocation').value;
+    const description = document.getElementById('activityDescription').value;
+    const evidence = document.getElementById('activityEvidence').files[0];
+    
+    if (!activityType) {
+        alert('Please select an activity type');
+        return;
+    }
+    
+    const spinner = document.getElementById('earnSpinner');
+    spinner.classList.remove('d-none');
+    
+    try {
+        // Demo points earning
+        const pointsMap = {
+            'qr_scan': 10,
+            'report_bin': 20,
+            'public_transport': 15,
+            'report_damage': 30,
+            'plantation': 50,
+            'e_waste': 40,
+            'carpool': 25,
+            'telemedicine': 10,
+            'walking': 20
+        };
+        
+        const pointsEarned = pointsMap[activityType] || 10;
+        currentPoints += pointsEarned;
+        
+        showNotification(`🎉 Earned ${pointsEarned} points for ${activityType.replace('_', ' ')}!`, 'success');
+        document.getElementById('pointsBalance').textContent = currentPoints;
+        
+        // Close modal and reset form
+        const modal = bootstrap.Modal.getInstance(document.getElementById('earnPointsModal'));
+        modal.hide();
+        document.getElementById('earnPointsForm').reset();
+        
+        // Reload data
+        loadUserData();
+        loadLeaderboard();
+        loadBadges();
+        
+    } catch (error) {
+        console.error('Error earning points:', error);
+        showNotification('Failed to earn points. Please try again.', 'danger');
+    } finally {
+        spinner.classList.add('d-none');
+    }
+}
+
+// Quick earn points function
+async function earnPoints(activityType) {
+    try {
+        const pointsMap = {
+            'qr_scan': 10,
+            'report_bin': 20,
+            'public_transport': 15,
+            'report_damage': 30,
+            'plantation': 50,
+            'e_waste': 40,
+            'carpool': 25,
+            'telemedicine': 10,
+            'walking': 20
+        };
+        
+        const pointsEarned = pointsMap[activityType] || 10;
+        currentPoints += pointsEarned;
+        
+        showNotification(`🎉 Earned ${pointsEarned} points!`, 'success');
+        document.getElementById('pointsBalance').textContent = currentPoints;
+        
+        // Reload data
+        loadUserData();
+        loadLeaderboard();
+        loadBadges();
+        
+    } catch (error) {
+        console.error('Error earning points:', error);
+        showNotification('Failed to earn points. Please try again.', 'danger');
+    }
+}
+
+// Show rewards modal
+function showRewardsModal() {
+    const modal = new bootstrap.Modal(document.getElementById('rewardsModal'));
+    loadRewards();
+    modal.show();
+}
+
+// Load rewards
+async function loadRewards() {
+    try {
+        // Demo rewards data
+        const demoRewards = [
+            {
+                id: 1,
+                name: 'Free Metro Ride',
+                category: 'transport',
+                points_required: 100,
+                description: 'Get one free metro ride',
+                value: '1 Free Metro Ride',
+                icon: 'fas fa-train'
+            },
+            {
+                id: 2,
+                name: 'Free Doctor Consultation',
+                category: 'healthcare',
+                points_required: 200,
+                description: 'Get one free telemedicine consultation',
+                value: '1 Free Doctor Consultation',
+                icon: 'fas fa-user-md'
+            },
+            {
+                id: 3,
+                name: 'Free Trash Pickup',
+                category: 'waste_management',
+                points_required: 300,
+                description: 'Get one free garbage pickup at home',
+                value: '1 Free Trash Pickup',
+                icon: 'fas fa-trash'
+            },
+            {
+                id: 4,
+                name: 'Electricity Bill Cashback',
+                category: 'utility_bills',
+                points_required: 500,
+                description: 'Get ₹100 cashback on electricity bill',
+                value: '₹100 Cashback',
+                icon: 'fas fa-bolt'
+            },
+            {
+                id: 5,
+                name: 'Online Course Access',
+                category: 'education',
+                points_required: 400,
+                description: 'Get access to one online course',
+                value: '1 Free Course',
+                icon: 'fas fa-graduation-cap'
+            },
+            {
+                id: 6,
+                name: 'Shopping Voucher',
+                category: 'shopping',
+                points_required: 600,
+                description: 'Get ₹200 discount voucher for partner stores',
+                value: '₹200 Discount Voucher',
+                icon: 'fas fa-shopping-bag'
+            }
+        ];
+        
+        currentRewards = demoRewards;
+        
+        let html = '';
+        demoRewards.forEach(reward => {
+            const canAfford = currentPoints >= reward.points_required;
+            html += `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6><i class="${reward.icon} me-2"></i>${reward.name}</h6>
+                                <p class="text-muted mb-1">${reward.description}</p>
+                                <small class="text-muted">${reward.value}</small>
+                            </div>
+                            <div class="text-end">
+                                <div class="mb-2">
+                                    <span class="badge bg-primary">${reward.points_required} points</span>
+                                </div>
+                                <button class="btn btn-sm ${canAfford ? 'btn-success' : 'btn-secondary'}" 
+                                        onclick="redeemReward(${reward.id})" 
+                                        ${!canAfford ? 'disabled' : ''}>
+                                    ${canAfford ? 'Redeem' : 'Insufficient Points'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        document.getElementById('rewardsContainer').innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading rewards:', error);
+        document.getElementById('rewardsContainer').innerHTML = '<p class="text-muted text-center">Unable to load rewards</p>';
+    }
+}
+
+// Show rewards by category
+function showRewardsByCategory(category) {
+    const modal = new bootstrap.Modal(document.getElementById('rewardsModal'));
+    loadRewardsByCategory(category);
+    modal.show();
+}
+
+// Load rewards by category
+async function loadRewardsByCategory(category) {
+    try {
+        const demoRewards = [
+            {
+                id: 1,
+                name: 'Free Metro Ride',
+                category: 'transport',
+                points_required: 100,
+                description: 'Get one free metro ride',
+                value: '1 Free Metro Ride',
+                icon: 'fas fa-train'
+            },
+            {
+                id: 2,
+                name: 'Free Doctor Consultation',
+                category: 'healthcare',
+                points_required: 200,
+                description: 'Get one free telemedicine consultation',
+                value: '1 Free Doctor Consultation',
+                icon: 'fas fa-user-md'
+            },
+            {
+                id: 3,
+                name: 'Free Trash Pickup',
+                category: 'waste_management',
+                points_required: 300,
+                description: 'Get one free garbage pickup at home',
+                value: '1 Free Trash Pickup',
+                icon: 'fas fa-trash'
+            },
+            {
+                id: 4,
+                name: 'Electricity Bill Cashback',
+                category: 'utility_bills',
+                points_required: 500,
+                description: 'Get ₹100 cashback on electricity bill',
+                value: '₹100 Cashback',
+                icon: 'fas fa-bolt'
+            },
+            {
+                id: 5,
+                name: 'Online Course Access',
+                category: 'education',
+                points_required: 400,
+                description: 'Get access to one online course',
+                value: '1 Free Course',
+                icon: 'fas fa-graduation-cap'
+            },
+            {
+                id: 6,
+                name: 'Shopping Voucher',
+                category: 'shopping',
+                points_required: 600,
+                description: 'Get ₹200 discount voucher for partner stores',
+                value: '₹200 Discount Voucher',
+                icon: 'fas fa-shopping-bag'
+            }
+        ];
+        
+        const filteredRewards = demoRewards.filter(reward => reward.category === category);
+        
+        let html = '';
+        filteredRewards.forEach(reward => {
+            const canAfford = currentPoints >= reward.points_required;
+            html += `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6><i class="${reward.icon} me-2"></i>${reward.name}</h6>
+                                <p class="text-muted mb-1">${reward.description}</p>
+                                <small class="text-muted">${reward.value}</small>
+                            </div>
+                            <div class="text-end">
+                                <div class="mb-2">
+                                    <span class="badge bg-primary">${reward.points_required} points</span>
+                                </div>
+                                <button class="btn btn-sm ${canAfford ? 'btn-success' : 'btn-secondary'}" 
+                                        onclick="redeemReward(${reward.id})" 
+                                        ${!canAfford ? 'disabled' : ''}>
+                                    ${canAfford ? 'Redeem' : 'Insufficient Points'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        document.getElementById('rewardsContainer').innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading rewards:', error);
+        document.getElementById('rewardsContainer').innerHTML = '<p class="text-muted text-center">Unable to load rewards</p>';
+    }
+}
+
+// Redeem reward
+async function redeemReward(rewardId) {
+    try {
+        const reward = currentRewards.find(r => r.id === rewardId);
+        if (!reward) {
+            showNotification('Reward not found', 'danger');
+            return;
+        }
+        
+        if (currentPoints < reward.points_required) {
+            showNotification('Insufficient points to redeem this reward', 'danger');
+            return;
+        }
+        
+        currentPoints -= reward.points_required;
+        
+        showNotification(`🎉 Successfully redeemed ${reward.name}! Points spent: ${reward.points_required}`, 'success');
+        document.getElementById('pointsBalance').textContent = currentPoints;
+        
+        // Reload rewards
+        loadRewards();
+        
+    } catch (error) {
+        console.error('Error redeeming reward:', error);
+        showNotification('Failed to redeem reward. Please try again.', 'danger');
+    }
+}
+
+// Show notification
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
+}
+</script>
+{% endblock %} 

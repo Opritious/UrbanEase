@@ -1,0 +1,485 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Smart Mobility - UrbanEase{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-bus me-3"></i>Smart Mobility
+                </h1>
+                <p class="lead mb-4">
+                    Navigate your city with real-time transport tracking, smart parking solutions, 
+                    and integrated public transport services.
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <img src="{% static 'images/mobility-hero.svg' %}" alt="Smart Mobility" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Transport Tracking -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h2 class="mb-4">
+                    <i class="fas fa-route me-2 text-primary"></i>Real-time Transport Tracking
+                </h2>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">From</label>
+                                <input type="text" class="form-control" id="fromLocation" placeholder="Enter starting location">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">To</label>
+                                <input type="text" class="form-control" id="toLocation" placeholder="Enter destination">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="searchRoutes()">
+                            <i class="fas fa-search me-2"></i>Find Routes
+                        </button>
+                        
+                        <div id="routesResults" class="mt-4" style="display: none;">
+                            <h5>Available Routes</h5>
+                            <div id="routesList"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <h3 class="mb-3">Live Updates</h3>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div id="liveUpdates">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-bus text-primary me-2"></i>
+                                <div>
+                                    <strong>Bus #123</strong>
+                                    <small class="text-muted d-block">5 min away</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-subway text-success me-2"></i>
+                                <div>
+                                    <strong>Metro Line A</strong>
+                                    <small class="text-muted d-block">On time</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-bicycle text-warning me-2"></i>
+                                <div>
+                                    <strong>Bike Share</strong>
+                                    <small class="text-muted d-block">15 bikes available</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Smart Parking -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-parking me-2 text-success"></i>Smart Parking Solutions
+        </h2>
+        
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-search me-2"></i>Find Parking
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control" id="parkingLocation" placeholder="Enter your location">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Radius (km)</label>
+                            <input type="range" class="form-range" id="parkingRadius" min="1" max="10" value="5">
+                            <small class="text-muted">5 km</small>
+                        </div>
+                        <button class="btn btn-success" onclick="searchParking()">
+                            <i class="fas fa-search me-2"></i>Find Parking Spots
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-charging-station me-2"></i>EV Charging Stations
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Charger Type</label>
+                            <select class="form-select" id="chargerType">
+                                <option value="">All Types</option>
+                                <option value="slow">Slow Charger</option>
+                                <option value="fast">Fast Charger</option>
+                                <option value="super">Super Charger</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-info" onclick="searchCharging()">
+                            <i class="fas fa-search me-2"></i>Find Charging Stations
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="parkingResults" class="mt-4" style="display: none;">
+            <h5>Available Parking Spots</h5>
+            <div id="parkingList" class="row"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Traffic Management -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-traffic-light me-2 text-warning"></i>AI-based Traffic Management
+        </h2>
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <canvas id="trafficChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-warning text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Traffic Alerts
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="trafficAlerts">
+                            <div class="alert alert-warning mb-2">
+                                <small><strong>Heavy traffic</strong> on Main Street</small>
+                            </div>
+                            <div class="alert alert-info mb-2">
+                                <small><strong>Construction</strong> on Highway 101</small>
+                            </div>
+                            <div class="alert alert-success">
+                                <small><strong>Clear roads</strong> in downtown area</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Results Modals -->
+<div class="modal fade" id="routesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Route Options</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="routesModalContent">
+                <!-- Routes will be populated here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="parkingModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Parking Options</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="parkingModalContent">
+                <!-- Parking spots will be populated here -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Search for transport routes
+function searchRoutes() {
+    const fromLocation = document.getElementById('fromLocation').value;
+    const toLocation = document.getElementById('toLocation').value;
+    
+    if (!fromLocation || !toLocation) {
+        alert('Please enter both locations');
+        return;
+    }
+    
+    // Show loading
+    document.getElementById('routesResults').style.display = 'block';
+    document.getElementById('routesList').innerHTML = '<div class="text-center"><div class="spinner-border"></div></div>';
+    
+    // Simulate API call
+    setTimeout(() => {
+        const routes = [
+            {
+                type: 'Bus',
+                route: 'Bus #123',
+                duration: '25 min',
+                cost: '$2.50',
+                stops: 8
+            },
+            {
+                type: 'Metro',
+                route: 'Metro Line A',
+                duration: '18 min',
+                cost: '$3.00',
+                stops: 5
+            },
+            {
+                type: 'Bike',
+                route: 'Bike Share',
+                duration: '35 min',
+                cost: '$1.50',
+                stops: 0
+            }
+        ];
+        
+        displayRoutes(routes);
+    }, 1500);
+}
+
+// Display routes
+function displayRoutes(routes) {
+    const routesList = document.getElementById('routesList');
+    let html = '';
+    
+    routes.forEach(route => {
+        html += `
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <h6 class="mb-0">${route.type}</h6>
+                            <small class="text-muted">${route.route}</small>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="fas fa-clock text-primary me-1"></i>
+                            <span>${route.duration}</span>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="fas fa-dollar-sign text-success me-1"></i>
+                            <span>${route.cost}</span>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary btn-sm" onclick="selectRoute('${route.type}')">
+                                Select Route
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    routesList.innerHTML = html;
+}
+
+// Search for parking spots
+function searchParking() {
+    const location = document.getElementById('parkingLocation').value;
+    const radius = document.getElementById('parkingRadius').value;
+    
+    if (!location) {
+        alert('Please enter a location');
+        return;
+    }
+    
+    // Show loading
+    document.getElementById('parkingResults').style.display = 'block';
+    document.getElementById('parkingList').innerHTML = '<div class="text-center"><div class="spinner-border"></div></div>';
+    
+    // Simulate API call
+    setTimeout(() => {
+        const parkingSpots = [
+            {
+                name: 'Central Parking Garage',
+                distance: '0.2 km',
+                available: 15,
+                rate: '$5/hour',
+                type: 'Standard'
+            },
+            {
+                name: 'Street Parking',
+                distance: '0.5 km',
+                available: 8,
+                rate: '$3/hour',
+                type: 'Standard'
+            },
+            {
+                name: 'Mall Parking',
+                distance: '0.8 km',
+                available: 25,
+                rate: '$4/hour',
+                type: 'Covered'
+            }
+        ];
+        
+        displayParking(parkingSpots);
+    }, 1500);
+}
+
+// Display parking spots
+function displayParking(spots) {
+    const parkingList = document.getElementById('parkingList');
+    let html = '';
+    
+    spots.forEach(spot => {
+        html += `
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">${spot.name}</h6>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="fas fa-map-marker-alt me-1"></i>${spot.distance}<br>
+                                <i class="fas fa-car me-1"></i>${spot.available} spots available<br>
+                                <i class="fas fa-dollar-sign me-1"></i>${spot.rate}<br>
+                                <i class="fas fa-tag me-1"></i>${spot.type}
+                            </small>
+                        </p>
+                        <button class="btn btn-success btn-sm" onclick="reserveParking('${spot.name}')">
+                            Reserve Spot
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    parkingList.innerHTML = html;
+}
+
+// Search for EV charging stations
+function searchCharging() {
+    const chargerType = document.getElementById('chargerType').value;
+    
+    // Show modal with charging stations
+    const modal = new bootstrap.Modal(document.getElementById('parkingModal'));
+    document.getElementById('parkingModal').querySelector('.modal-title').textContent = 'EV Charging Stations';
+    
+    const content = document.getElementById('parkingModalContent');
+    content.innerHTML = `
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Downtown Charging Station</h6>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="fas fa-bolt me-1"></i>Fast Charger<br>
+                                <i class="fas fa-map-marker-alt me-1"></i>0.3 km away<br>
+                                <i class="fas fa-dollar-sign me-1"></i>$0.25/kWh<br>
+                                <i class="fas fa-check text-success me-1"></i>Available
+                            </small>
+                        </p>
+                        <button class="btn btn-info btn-sm">Start Charging</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Mall Charging Hub</h6>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="fas fa-bolt me-1"></i>Super Charger<br>
+                                <i class="fas fa-map-marker-alt me-1"></i>0.8 km away<br>
+                                <i class="fas fa-dollar-sign me-1"></i>$0.30/kWh<br>
+                                <i class="fas fa-check text-success me-1"></i>Available
+                            </small>
+                        </p>
+                        <button class="btn btn-info btn-sm">Start Charging</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    modal.show();
+}
+
+// Select a route
+function selectRoute(routeType) {
+    alert(`Route selected: ${routeType}. Redirecting to booking...`);
+}
+
+// Reserve parking spot
+function reserveParking(spotName) {
+    alert(`Parking spot reserved: ${spotName}`);
+}
+
+// Initialize traffic chart
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('trafficChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['6AM', '8AM', '10AM', '12PM', '2PM', '4PM', '6PM', '8PM'],
+            datasets: [{
+                label: 'Traffic Level',
+                data: [30, 80, 60, 70, 50, 90, 75, 40],
+                borderColor: 'rgb(255, 193, 7)',
+                backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Traffic Flow Today'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+    
+    // Update radius display
+    document.getElementById('parkingRadius').addEventListener('input', function() {
+        this.nextElementSibling.textContent = this.value + ' km';
+    });
+});
+</script>
+{% endblock %} 

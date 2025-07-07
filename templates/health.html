@@ -1,0 +1,522 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Smart Health - UrbanEase{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-success text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-heartbeat me-3"></i>Smart Health
+                </h1>
+                <p class="lead mb-4">
+                    Monitor your health, book telemedicine appointments, and access emergency services 
+                    with our comprehensive health platform.
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <img src="{% static 'images/health-hero.svg' %}" alt="Smart Health" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Health Metrics Dashboard -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-chart-line me-2 text-success"></i>Health Dashboard
+        </h2>
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-area me-2"></i>Health Metrics
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="healthChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body text-center">
+                        <i class="fas fa-heartbeat fa-3x text-danger mb-3"></i>
+                        <h4 id="heartRate">72</h4>
+                        <p class="text-muted">BPM</p>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lungs fa-3x text-info mb-3"></i>
+                        <h4 id="oxygenLevel">98</h4>
+                        <p class="text-muted">SpO2 %</p>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-thermometer-half fa-3x text-warning mb-3"></i>
+                        <h4 id="temperature">36.8</h4>
+                        <p class="text-muted">°C</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Telemedicine -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-video me-2 text-primary"></i>Telemedicine Services
+        </h2>
+        
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="appointmentForm">
+                            <div class="mb-3">
+                                <label class="form-label">Specialty</label>
+                                <select class="form-select" id="specialty" required>
+                                    <option value="">Select Specialty</option>
+                                    <option value="general">General Medicine</option>
+                                    <option value="cardiology">Cardiology</option>
+                                    <option value="dermatology">Dermatology</option>
+                                    <option value="pediatrics">Pediatrics</option>
+                                    <option value="psychiatry">Psychiatry</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" id="appointmentDate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Time</label>
+                                <select class="form-select" id="appointmentTime" required>
+                                    <option value="">Select Time</option>
+                                    <option value="09:00">9:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="14:00">2:00 PM</option>
+                                    <option value="15:00">3:00 PM</option>
+                                    <option value="16:00">4:00 PM</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Symptoms</label>
+                                <textarea class="form-control" id="symptoms" rows="3" placeholder="Describe your symptoms..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-calendar-check me-2"></i>Book Appointment
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user-md me-2"></i>Available Doctors
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="doctorsList">
+                            <div class="d-flex align-items-center mb-3 p-3 border rounded">
+                                <img src="{% static 'images/doctor1.jpg' %}" alt="Dr. Smith" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <h6 class="mb-0">Dr. Sarah Smith</h6>
+                                    <small class="text-muted">General Medicine</small>
+                                    <div class="mt-1">
+                                        <span class="badge bg-success">Available</span>
+                                        <small class="text-muted ms-2">Next: 2:00 PM</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center mb-3 p-3 border rounded">
+                                <img src="{% static 'images/doctor2.jpg' %}" alt="Dr. Johnson" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <h6 class="mb-0">Dr. Michael Johnson</h6>
+                                    <small class="text-muted">Cardiology</small>
+                                    <div class="mt-1">
+                                        <span class="badge bg-warning">Busy</span>
+                                        <small class="text-muted ms-2">Next: 4:30 PM</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center p-3 border rounded">
+                                <img src="{% static 'images/doctor3.jpg' %}" alt="Dr. Davis" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <h6 class="mb-0">Dr. Emily Davis</h6>
+                                    <small class="text-muted">Pediatrics</small>
+                                    <div class="mt-1">
+                                        <span class="badge bg-success">Available</span>
+                                        <small class="text-muted ms-2">Next: 1:00 PM</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Emergency Services -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-ambulance me-2 text-danger"></i>Emergency Services
+        </h2>
+        
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card shadow-sm text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-phone-alt fa-3x text-danger mb-3"></i>
+                        <h5>Emergency Hotline</h5>
+                        <p class="text-muted">24/7 emergency response</p>
+                        <button class="btn btn-danger btn-lg" onclick="callEmergency()">
+                            <i class="fas fa-phone me-2"></i>Call 911
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card shadow-sm text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-map-marker-alt fa-3x text-warning mb-3"></i>
+                        <h5>Nearest Hospital</h5>
+                        <p class="text-muted">Find closest medical facility</p>
+                        <button class="btn btn-warning btn-lg" onclick="findNearestHospital()">
+                            <i class="fas fa-search me-2"></i>Find Hospital
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card shadow-sm text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-user-shield fa-3x text-info mb-3"></i>
+                        <h5>Health Insurance</h5>
+                        <p class="text-muted">Verify coverage and benefits</p>
+                        <button class="btn btn-info btn-lg" onclick="checkInsurance()">
+                            <i class="fas fa-shield-alt me-2"></i>Check Coverage
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Health Tips -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-lightbulb me-2 text-warning"></i>Health Tips
+        </h2>
+        
+        <div class="row">
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-dumbbell fa-2x text-primary mb-3"></i>
+                        <h6>Exercise Regularly</h6>
+                        <p class="text-muted small">Aim for 150 minutes of moderate exercise per week</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-apple-alt fa-2x text-success mb-3"></i>
+                        <h6>Eat Healthy</h6>
+                        <p class="text-muted small">Include fruits, vegetables, and whole grains in your diet</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-bed fa-2x text-info mb-3"></i>
+                        <h6>Get Enough Sleep</h6>
+                        <p class="text-muted small">Aim for 7-9 hours of quality sleep each night</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-tint fa-2x text-primary mb-3"></i>
+                        <h6>Stay Hydrated</h6>
+                        <p class="text-muted small">Drink at least 8 glasses of water daily</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Emergency Modal -->
+<div class="modal fade" id="emergencyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Emergency Alert
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="emergencyModalBody">
+                <!-- Emergency content will be populated here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Appointment Confirmation Modal -->
+<div class="modal fade" id="appointmentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-calendar-check me-2"></i>Appointment Confirmed
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="appointmentModalBody">
+                <!-- Appointment details will be populated here -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Health metrics data
+let healthData = {
+    heartRate: 72,
+    oxygenLevel: 98,
+    temperature: 36.8,
+    bloodPressure: '120/80',
+    steps: 8500,
+    sleep: 7.5
+};
+
+// Initialize health chart
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('healthChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Heart Rate (BPM)',
+                data: [70, 72, 75, 71, 73, 68, 72],
+                borderColor: 'rgb(220, 53, 69)',
+                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                tension: 0.4
+            }, {
+                label: 'Oxygen Level (%)',
+                data: [98, 97, 99, 98, 97, 98, 98],
+                borderColor: 'rgb(13, 202, 240)',
+                backgroundColor: 'rgba(13, 202, 240, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Weekly Health Metrics'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+    
+    // Update real-time metrics
+    updateHealthMetrics();
+});
+
+// Update health metrics
+function updateHealthMetrics() {
+    // Simulate real-time updates
+    setInterval(() => {
+        healthData.heartRate = Math.floor(Math.random() * 20) + 65;
+        healthData.oxygenLevel = Math.floor(Math.random() * 4) + 96;
+        healthData.temperature = (Math.random() * 2 + 36.0).toFixed(1);
+        
+        document.getElementById('heartRate').textContent = healthData.heartRate;
+        document.getElementById('oxygenLevel').textContent = healthData.oxygenLevel;
+        document.getElementById('temperature').textContent = healthData.temperature;
+    }, 5000);
+}
+
+// Handle appointment form submission
+document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = {
+        specialty: document.getElementById('specialty').value,
+        date: document.getElementById('appointmentDate').value,
+        time: document.getElementById('appointmentTime').value,
+        symptoms: document.getElementById('symptoms').value
+    };
+    
+    // Show loading
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Booking...';
+    submitBtn.disabled = true;
+    
+    // Simulate API call
+    setTimeout(() => {
+        showAppointmentConfirmation(formData);
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        this.reset();
+    }, 2000);
+});
+
+// Show appointment confirmation
+function showAppointmentConfirmation(data) {
+    const modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+    const modalBody = document.getElementById('appointmentModalBody');
+    
+    modalBody.innerHTML = `
+        <div class="text-center">
+            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+            <h5>Appointment Booked Successfully!</h5>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <p><strong>Specialty:</strong><br>${data.specialty}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Date & Time:</strong><br>${data.date} at ${data.time}</p>
+                </div>
+            </div>
+            <div class="alert alert-info mt-3">
+                <small>
+                    <i class="fas fa-info-circle me-2"></i>
+                    You will receive a confirmation email and SMS with video call details.
+                </small>
+            </div>
+        </div>
+    `;
+    
+    modal.show();
+}
+
+// Emergency functions
+function callEmergency() {
+    if (confirm('Are you sure you want to call emergency services?')) {
+        window.location.href = 'tel:911';
+    }
+}
+
+function findNearestHospital() {
+    // Get user location and find nearest hospital
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            // Simulate finding nearest hospital
+            showNotification('Nearest hospital: City General Hospital (2.3 km away)', 'info');
+            
+            // Open in maps
+            window.open(`https://www.google.com/maps/search/hospital/@${lat},${lng},15z`, '_blank');
+        }, function() {
+            showNotification('Unable to get location. Please enable location services.', 'warning');
+        });
+    } else {
+        showNotification('Geolocation is not supported by this browser.', 'warning');
+    }
+}
+
+function checkInsurance() {
+    const modal = new bootstrap.Modal(document.getElementById('emergencyModal'));
+    const modalBody = document.getElementById('emergencyModalBody');
+    
+    modalBody.innerHTML = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6><i class="fas fa-shield-alt text-info me-2"></i>Insurance Status</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><strong>Provider:</strong> HealthCare Plus</li>
+                    <li class="mb-2"><strong>Policy:</strong> Premium Family Plan</li>
+                    <li class="mb-2"><strong>Status:</strong> <span class="badge bg-success">Active</span></li>
+                    <li class="mb-2"><strong>Coverage:</strong> 90%</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6><i class="fas fa-credit-card text-success me-2"></i>Benefits</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-check text-success me-1"></i>Emergency Services</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-1"></i>Telemedicine</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-1"></i>Prescription Drugs</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-1"></i>Preventive Care</li>
+                </ul>
+            </div>
+        </div>
+    `;
+    
+    modal.show();
+}
+
+// Show notification function (if not already defined)
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
+}
+</script>
+{% endblock %} 

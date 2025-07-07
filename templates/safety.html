@@ -1,0 +1,789 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Smart Safety - UrbanEase{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-warning text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-shield-alt me-3"></i>Smart Safety
+                </h1>
+                <p class="lead mb-4">
+                    Stay protected with real-time disaster alerts, AI-powered fraud detection, 
+                    and comprehensive security monitoring for your safety.
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <img src="{% static 'images/safety-hero.svg' %}" alt="Smart Safety" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Weather Widget -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-cloud-sun me-2"></i>Kolkata Weather
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="weatherWidget" class="row">
+                            <div class="col-md-6 text-center">
+                                <div class="weather-main">
+                                    <h2 id="weatherTemp">--°C</h2>
+                                    <p id="weatherDesc" class="text-muted">Loading...</p>
+                                    <div class="weather-icon">
+                                        <i id="weatherIcon" class="fas fa-cloud fa-3x text-info"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="weather-details">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small class="text-muted">Feels Like</small>
+                                            <p id="feelsLike" class="mb-2">--°C</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Humidity</small>
+                                            <p id="humidity" class="mb-2">--%</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Wind Speed</small>
+                                            <p id="windSpeed" class="mb-2">-- km/h</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Visibility</small>
+                                            <p id="visibility" class="mb-2">-- km</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-warning text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Weather Alerts
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="weatherAlerts">
+                            <div class="text-center">
+                                <div class="spinner-border text-warning" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading weather alerts...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Safety Dashboard -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-chart-bar me-2 text-warning"></i>Safety Dashboard
+        </h2>
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-warning text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Active Alerts
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="alertsContainer">
+                            <div class="alert alert-warning d-flex align-items-center mb-3">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <div>
+                                    <strong>Weather Alert:</strong> Heavy rain expected in downtown area
+                                    <small class="d-block text-muted">2 minutes ago</small>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info d-flex align-items-center mb-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <div>
+                                    <strong>Traffic Alert:</strong> Construction on Main Street
+                                    <small class="d-block text-muted">15 minutes ago</small>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-success d-flex align-items-center">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <div>
+                                    <strong>All Clear:</strong> Previous emergency resolved
+                                    <small class="d-block text-muted">1 hour ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body text-center">
+                        <i class="fas fa-shield-alt fa-3x text-warning mb-3"></i>
+                        <h4 id="safetyScore">85</h4>
+                        <p class="text-muted">Safety Score</p>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body text-center">
+                        <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                        <h4 id="activeAlerts">3</h4>
+                        <p class="text-muted">Active Alerts</p>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-shield fa-3x text-info mb-3"></i>
+                        <h4 id="securityLevel">High</h4>
+                        <p class="text-muted">Security Level</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Disaster Alerts -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-radiation me-2 text-danger"></i>Disaster Alerts
+        </h2>
+        
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-bell me-2"></i>Alert Settings
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="alertSettingsForm">
+                            <div class="mb-3">
+                                <label class="form-label">Alert Types</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="weatherAlerts" checked>
+                                    <label class="form-check-label" for="weatherAlerts">
+                                        Weather Alerts
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="trafficAlerts" checked>
+                                    <label class="form-check-label" for="trafficAlerts">
+                                        Traffic Alerts
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="securityAlerts" checked>
+                                    <label class="form-check-label" for="securityAlerts">
+                                        Security Alerts
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="emergencyAlerts" checked>
+                                    <label class="form-check-label" for="emergencyAlerts">
+                                        Emergency Alerts
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Notification Method</label>
+                                <select class="form-select" id="notificationMethod">
+                                    <option value="push">Push Notifications</option>
+                                    <option value="sms">SMS</option>
+                                    <option value="email">Email</option>
+                                    <option value="all">All Methods</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-save me-2"></i>Save Settings
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-map-marker-alt me-2"></i>Safe Zones
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="safeZonesList">
+                            <div class="d-flex align-items-center mb-3 p-3 border rounded">
+                                <i class="fas fa-building text-success me-3"></i>
+                                <div>
+                                    <h6 class="mb-0">City Hall</h6>
+                                    <small class="text-muted">Emergency shelter and services</small>
+                                    <div class="mt-1">
+                                        <span class="badge bg-success">Open</span>
+                                        <small class="text-muted ms-2">0.5 km away</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center mb-3 p-3 border rounded">
+                                <i class="fas fa-hospital text-primary me-3"></i>
+                                <div>
+                                    <h6 class="mb-0">General Hospital</h6>
+                                    <small class="text-muted">Medical emergency services</small>
+                                    <div class="mt-1">
+                                        <span class="badge bg-success">Open</span>
+                                        <small class="text-muted ms-2">1.2 km away</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center p-3 border rounded">
+                                <i class="fas fa-shield-alt text-warning me-3"></i>
+                                <div>
+                                    <h6 class="mb-0">Police Station</h6>
+                                    <small class="text-muted">Law enforcement and security</small>
+                                    <div class="mt-1">
+                                        <span class="badge bg-success">Open</span>
+                                        <small class="text-muted ms-2">0.8 km away</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Fraud Detection -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-robot me-2 text-primary"></i>AI Fraud Detection
+        </h2>
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-line me-2"></i>Fraud Detection Analytics
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="fraudChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body text-center">
+                        <i class="fas fa-shield-check fa-3x text-success mb-3"></i>
+                        <h4 id="fraudPrevented">98.5%</h4>
+                        <p class="text-muted">Fraud Prevented</p>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body text-center">
+                        <i class="fas fa-clock fa-3x text-warning mb-3"></i>
+                        <h4 id="responseTime">2.3s</h4>
+                        <p class="text-muted">Avg Response Time</p>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-eye fa-3x text-info mb-3"></i>
+                        <h4 id="threatsDetected">156</h4>
+                        <p class="text-muted">Threats Detected</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Security Monitoring -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-cctv me-2 text-dark"></i>Security Monitoring
+        </h2>
+        
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-camera me-2"></i>Security Cameras
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="text-center">
+                                    <i class="fas fa-video fa-2x text-success mb-2"></i>
+                                    <h6>Downtown Area</h6>
+                                    <small class="text-muted">12 cameras active</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="text-center">
+                                    <i class="fas fa-video fa-2x text-success mb-2"></i>
+                                    <h6>Residential Zone</h6>
+                                    <small class="text-muted">8 cameras active</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="text-center">
+                                    <i class="fas fa-video fa-2x text-success mb-2"></i>
+                                    <h6>Business District</h6>
+                                    <small class="text-muted">15 cameras active</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="text-center">
+                                    <i class="fas fa-video fa-2x text-success mb-2"></i>
+                                    <h6>Public Parks</h6>
+                                    <small class="text-muted">6 cameras active</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-clipboard-list me-2"></i>Security Checks
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="securityChecks">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <div class="flex-grow-1">
+                                    <strong>Perimeter Security</strong>
+                                    <small class="text-muted d-block">Last checked: 5 min ago</small>
+                                </div>
+                                <span class="badge bg-success">Pass</span>
+                            </div>
+                            
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <div class="flex-grow-1">
+                                    <strong>Access Control</strong>
+                                    <small class="text-muted d-block">Last checked: 10 min ago</small>
+                                </div>
+                                <span class="badge bg-success">Pass</span>
+                            </div>
+                            
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                <div class="flex-grow-1">
+                                    <strong>Network Security</strong>
+                                    <small class="text-muted d-block">Last checked: 15 min ago</small>
+                                </div>
+                                <span class="badge bg-warning">Warning</span>
+                            </div>
+                            
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <div class="flex-grow-1">
+                                    <strong>Emergency Systems</strong>
+                                    <small class="text-muted d-block">Last checked: 20 min ago</small>
+                                </div>
+                                <span class="badge bg-success">Pass</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Report Incident -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-flag me-2 text-danger"></i>Report Incident
+        </h2>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Report Security Incident
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="incidentForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Incident Type</label>
+                                    <select class="form-select" id="incidentType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="theft">Theft</option>
+                                        <option value="vandalism">Vandalism</option>
+                                        <option value="suspicious">Suspicious Activity</option>
+                                        <option value="traffic">Traffic Violation</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Priority</label>
+                                    <select class="form-select" id="priority" required>
+                                        <option value="">Select Priority</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                        <option value="emergency">Emergency</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Location</label>
+                                <input type="text" class="form-control" id="incidentLocation" placeholder="Enter location or address" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" id="incidentDescription" rows="4" placeholder="Describe the incident in detail..." required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Contact Information</label>
+                                <input type="tel" class="form-control" id="contactPhone" placeholder="Your phone number (optional)">
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-danger btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i>Report Incident
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Emergency Modal -->
+<div class="modal fade" id="emergencyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Emergency Alert
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="emergencyModalBody">
+                <!-- Emergency content will be populated here -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Weather API functions
+async function loadWeatherData() {
+    try {
+        const response = await fetch('/api/safety/weather/current/');
+        const data = await response.json();
+        
+        if (data.success) {
+            updateWeatherWidget(data.data);
+        }
+    } catch (error) {
+        console.error('Error loading weather data:', error);
+        // Show demo data if API fails
+        updateWeatherWidget({
+            temperature: 32.5,
+            feels_like: 35.2,
+            humidity: 78,
+            wind_speed: 3.2,
+            visibility: 10,
+            description: 'scattered clouds',
+            icon: '03d'
+        });
+    }
+}
+
+function updateWeatherWidget(weather) {
+    document.getElementById('weatherTemp').textContent = `${Math.round(weather.temperature)}°C`;
+    document.getElementById('weatherDesc').textContent = weather.description;
+    document.getElementById('feelsLike').textContent = `${Math.round(weather.feels_like)}°C`;
+    document.getElementById('humidity').textContent = `${weather.humidity}%`;
+    document.getElementById('windSpeed').textContent = `${weather.wind_speed} km/h`;
+    document.getElementById('visibility').textContent = `${(weather.visibility / 1000).toFixed(1)} km`;
+    
+    // Update weather icon
+    const iconElement = document.getElementById('weatherIcon');
+    iconElement.className = getWeatherIconClass(weather.icon);
+}
+
+function getWeatherIconClass(iconCode) {
+    const iconMap = {
+        '01d': 'fas fa-sun text-warning',
+        '01n': 'fas fa-moon text-secondary',
+        '02d': 'fas fa-cloud-sun text-warning',
+        '02n': 'fas fa-cloud-moon text-secondary',
+        '03d': 'fas fa-cloud text-info',
+        '03n': 'fas fa-cloud text-secondary',
+        '04d': 'fas fa-clouds text-info',
+        '04n': 'fas fa-clouds text-secondary',
+        '09d': 'fas fa-cloud-rain text-primary',
+        '09n': 'fas fa-cloud-rain text-primary',
+        '10d': 'fas fa-cloud-sun-rain text-primary',
+        '10n': 'fas fa-cloud-moon-rain text-primary',
+        '11d': 'fas fa-bolt text-warning',
+        '11n': 'fas fa-bolt text-warning',
+        '13d': 'fas fa-snowflake text-info',
+        '13n': 'fas fa-snowflake text-info',
+        '50d': 'fas fa-smog text-secondary',
+        '50n': 'fas fa-smog text-secondary'
+    };
+    return iconMap[iconCode] || 'fas fa-cloud text-info';
+}
+
+async function loadWeatherAlerts() {
+    try {
+        const response = await fetch('/api/safety/weather/alerts/');
+        const data = await response.json();
+        
+        if (data.success) {
+            updateWeatherAlerts(data.data);
+        }
+    } catch (error) {
+        console.error('Error loading weather alerts:', error);
+        // Show demo alerts if API fails
+        updateWeatherAlerts([
+            {
+                event: 'Heavy Rain',
+                description: 'Heavy rainfall expected in Kolkata and surrounding areas',
+                severity: 'moderate'
+            }
+        ]);
+    }
+}
+
+function updateWeatherAlerts(alerts) {
+    const container = document.getElementById('weatherAlerts');
+    
+    if (alerts.length === 0) {
+        container.innerHTML = '<p class="text-muted text-center">No weather alerts at this time.</p>';
+        return;
+    }
+    
+    let html = '';
+    alerts.forEach(alert => {
+        const severityClass = alert.severity === 'severe' ? 'danger' : 
+                            alert.severity === 'moderate' ? 'warning' : 'info';
+        
+        html += `
+            <div class="alert alert-${severityClass} mb-2">
+                <small>
+                    <strong>${alert.event}</strong><br>
+                    ${alert.description}
+                </small>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Initialize weather data when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadWeatherData();
+    loadWeatherAlerts();
+    
+    // Update weather every 5 minutes
+    setInterval(loadWeatherData, 300000);
+    setInterval(loadWeatherAlerts, 300000);
+});
+
+// Initialize fraud detection chart
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('fraudChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Prevented', 'Detected', 'Investigating'],
+            datasets: [{
+                data: [85, 10, 5],
+                backgroundColor: [
+                    'rgb(40, 167, 69)',
+                    'rgb(255, 193, 7)',
+                    'rgb(220, 53, 69)'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Fraud Detection Results'
+                }
+            }
+        }
+    });
+    
+    // Update real-time safety metrics
+    updateSafetyMetrics();
+});
+
+// Update safety metrics
+function updateSafetyMetrics() {
+    setInterval(() => {
+        // Simulate real-time updates
+        const safetyScore = Math.floor(Math.random() * 20) + 75;
+        const activeAlerts = Math.floor(Math.random() * 5) + 1;
+        
+        document.getElementById('safetyScore').textContent = safetyScore;
+        document.getElementById('activeAlerts').textContent = activeAlerts;
+    }, 10000);
+}
+
+// Handle alert settings form
+document.getElementById('alertSettingsForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const settings = {
+        weatherAlerts: document.getElementById('weatherAlerts').checked,
+        trafficAlerts: document.getElementById('trafficAlerts').checked,
+        securityAlerts: document.getElementById('securityAlerts').checked,
+        emergencyAlerts: document.getElementById('emergencyAlerts').checked,
+        notificationMethod: document.getElementById('notificationMethod').value
+    };
+    
+    // Show loading
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+    submitBtn.disabled = true;
+    
+    // Simulate API call
+    setTimeout(() => {
+        showNotification('Alert settings saved successfully!', 'success');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 1500);
+});
+
+// Handle incident report form
+document.getElementById('incidentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const incidentData = {
+        type: document.getElementById('incidentType').value,
+        priority: document.getElementById('priority').value,
+        location: document.getElementById('incidentLocation').value,
+        description: document.getElementById('incidentDescription').value,
+        contactPhone: document.getElementById('contactPhone').value
+    };
+    
+    // Show loading
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Reporting...';
+    submitBtn.disabled = true;
+    
+    // Simulate API call
+    setTimeout(() => {
+        showIncidentConfirmation(incidentData);
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        this.reset();
+    }, 2000);
+});
+
+// Show incident confirmation
+function showIncidentConfirmation(data) {
+    const modal = new bootstrap.Modal(document.getElementById('emergencyModal'));
+    const modalBody = document.getElementById('emergencyModalBody');
+    
+    modalBody.innerHTML = `
+        <div class="text-center">
+            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+            <h5>Incident Reported Successfully!</h5>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <p><strong>Type:</strong><br>${data.type}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Priority:</strong><br>${data.priority}</p>
+                </div>
+            </div>
+            <div class="alert alert-info mt-3">
+                <small>
+                    <i class="fas fa-info-circle me-2"></i>
+                    Your report has been submitted to local authorities. 
+                    Reference ID: #${Math.random().toString(36).substr(2, 9).toUpperCase()}
+                </small>
+            </div>
+        </div>
+    `;
+    
+    modal.show();
+}
+
+// Show notification function
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
+}
+</script>
+{% endblock %} 

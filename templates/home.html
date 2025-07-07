@@ -1,0 +1,490 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}UrbanEase - Smart Urban Living Platform{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-gradient-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    Smart Urban Living<br>
+                    <span class="text-warning">Made Simple</span>
+                </h1>
+                <p class="lead mb-4">
+                    Transform your city experience with UrbanEase. Navigate smarter, stay healthier, 
+                    and feel safer with our comprehensive smart city platform.
+                </p>
+                <div class="hero-buttons">
+                    <a href="{% url 'register' %}" class="btn btn-warning btn-lg me-3">
+                        <i class="fas fa-rocket me-2"></i>Get Started
+                    </a>
+                    <a href="#features" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-play me-2"></i>Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image text-center">
+                    <img src="{% static 'images/hero-city.svg' %}" alt="Smart City" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Weather Section -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-cloud-sun me-2"></i>Kolkata Weather
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="weatherWidget" class="row">
+                            <div class="col-md-6 text-center">
+                                <div class="weather-main">
+                                    <h2 id="weatherTemp">--°C</h2>
+                                    <p id="weatherDesc" class="text-muted">Loading...</p>
+                                    <div class="weather-icon">
+                                        <i id="weatherIcon" class="fas fa-cloud fa-3x text-info"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="weather-details">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small class="text-muted">Feels Like</small>
+                                            <p id="feelsLike" class="mb-2">--°C</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Humidity</small>
+                                            <p id="humidity" class="mb-2">--%</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Wind Speed</small>
+                                            <p id="windSpeed" class="mb-2">-- km/h</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Visibility</small>
+                                            <p id="visibility" class="mb-2">-- km</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-warning text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Weather Alerts
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="weatherAlerts">
+                            <div class="text-center">
+                                <div class="spinner-border text-warning" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading weather alerts...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">Smart Features</h2>
+                <p class="lead text-muted">Everything you need for modern urban living</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Smart Mobility -->
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-bus fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">Smart Mobility</h4>
+                            <p class="card-text text-muted">
+                                Real-time transport tracking, smart parking, and integrated public transport 
+                                for seamless urban navigation.
+                            </p>
+                            <a href="{% url 'mobility' %}" class="btn btn-outline-primary">
+                                Explore Mobility
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Smart Health -->
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-heartbeat fa-3x text-success"></i>
+                            </div>
+                            <h4 class="card-title">Smart Health</h4>
+                            <p class="card-text text-muted">
+                                Personalized health insights, telemedicine, and emergency services 
+                                for your well-being.
+                            </p>
+                            <a href="{% url 'health' %}" class="btn btn-outline-success">
+                                Explore Health
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Smart Safety -->
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-shield-alt fa-3x text-warning"></i>
+                            </div>
+                            <h4 class="card-title">Smart Safety</h4>
+                            <p class="card-text text-muted">
+                                Disaster alerts, fraud detection, and security monitoring 
+                                to keep you safe and secure.
+                            </p>
+                            <a href="{% url 'safety' %}" class="btn btn-outline-warning">
+                                Explore Safety
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Smart Services -->
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-cogs fa-3x text-info"></i>
+                            </div>
+                            <h4 class="card-title">Smart Services</h4>
+                            <p class="card-text text-muted">
+                                Automated services and self-service options for all your urban needs.
+                            </p>
+                            <a href="{% url 'services' %}" class="btn btn-outline-info">
+                                Explore Services
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Eco Points -->
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-leaf fa-3x text-success"></i>
+                            </div>
+                            <h4 class="card-title">Eco Points</h4>
+                            <p class="card-text text-muted">
+                                Earn rewards for sustainable choices and track your environmental impact.
+                            </p>
+                            <a href="{% url 'eco-points' %}" class="btn btn-outline-success">
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Real-time Updates -->
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-wifi fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">Real-time Updates</h4>
+                            <p class="card-text text-muted">
+                                Live updates on transport, traffic, and emergency alerts.
+                            </p>
+                            <button class="btn btn-outline-primary" onclick="showLiveUpdates()">
+                                Live Updates
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-card">
+                    <h3 class="display-4 fw-bold text-primary" id="usersCount">10K+</h3>
+                    <p class="text-muted">Active Users</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-card">
+                    <h3 class="display-4 fw-bold text-success" id="routesCount">500+</h3>
+                    <p class="text-muted">Transport Routes</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-card">
+                    <h3 class="display-4 fw-bold text-warning" id="alertsCount">50+</h3>
+                    <p class="text-muted">Safety Alerts</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-card">
+                    <h3 class="display-4 fw-bold text-info" id="pointsCount">1M+</h3>
+                    <p class="text-muted">Eco Points Earned</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Live Updates Modal -->
+<div class="modal fade" id="liveUpdatesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-wifi me-2"></i>Live Updates
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="liveUpdatesContent">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading live updates...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Animate stats on scroll
+function animateStats() {
+    const stats = document.querySelectorAll('.stat-card h3');
+    stats.forEach(stat => {
+        const target = parseInt(stat.textContent.replace(/[^\d]/g, ''));
+        let current = 0;
+        const increment = target / 50;
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            stat.textContent = Math.floor(current).toLocaleString() + '+';
+        }, 50);
+    });
+}
+
+// Show live updates modal
+function showLiveUpdates() {
+    const modal = new bootstrap.Modal(document.getElementById('liveUpdatesModal'));
+    modal.show();
+    
+    // Simulate live updates
+    setTimeout(() => {
+        const content = document.getElementById('liveUpdatesContent');
+        content.innerHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <h6><i class="fas fa-bus text-primary me-2"></i>Transport Updates</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><small class="text-muted">2 min ago</small><br>Bus #123 running 5 min late</li>
+                        <li class="mb-2"><small class="text-muted">5 min ago</small><br>Metro line A operating normally</li>
+                        <li class="mb-2"><small class="text-muted">8 min ago</small><br>New bike sharing station added</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6><i class="fas fa-shield-alt text-warning me-2"></i>Safety Updates</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><small class="text-muted">1 min ago</small><br>Traffic incident cleared on Main St</li>
+                        <li class="mb-2"><small class="text-muted">3 min ago</small><br>Weather alert: Light rain expected</li>
+                        <li class="mb-2"><small class="text-muted">10 min ago</small><br>Emergency services available</li>
+                    </ul>
+                </div>
+            </div>
+        `;
+    }, 1000);
+}
+
+// Initialize animations when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate stats when they come into view
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateStats();
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+    
+    const statsSection = document.querySelector('.bg-light');
+    if (statsSection) {
+        observer.observe(statsSection);
+    }
+});
+
+// Weather API functions
+async function loadWeatherData() {
+    try {
+        const response = await fetch('/api/safety/weather/current/');
+        const data = await response.json();
+        
+        if (data.success) {
+            updateWeatherWidget(data.data);
+        }
+    } catch (error) {
+        console.error('Error loading weather data:', error);
+        // Show demo data if API fails
+        updateWeatherWidget({
+            temperature: 32.5,
+            feels_like: 35.2,
+            humidity: 78,
+            wind_speed: 3.2,
+            visibility: 10,
+            description: 'scattered clouds',
+            icon: '03d'
+        });
+    }
+}
+
+function updateWeatherWidget(weather) {
+    document.getElementById('weatherTemp').textContent = `${Math.round(weather.temperature)}°C`;
+    document.getElementById('weatherDesc').textContent = weather.description;
+    document.getElementById('feelsLike').textContent = `${Math.round(weather.feels_like)}°C`;
+    document.getElementById('humidity').textContent = `${weather.humidity}%`;
+    document.getElementById('windSpeed').textContent = `${weather.wind_speed} km/h`;
+    document.getElementById('visibility').textContent = `${(weather.visibility / 1000).toFixed(1)} km`;
+    
+    // Update weather icon
+    const iconElement = document.getElementById('weatherIcon');
+    iconElement.className = getWeatherIconClass(weather.icon);
+}
+
+function getWeatherIconClass(iconCode) {
+    const iconMap = {
+        '01d': 'fas fa-sun text-warning',
+        '01n': 'fas fa-moon text-secondary',
+        '02d': 'fas fa-cloud-sun text-warning',
+        '02n': 'fas fa-cloud-moon text-secondary',
+        '03d': 'fas fa-cloud text-info',
+        '03n': 'fas fa-cloud text-secondary',
+        '04d': 'fas fa-clouds text-info',
+        '04n': 'fas fa-clouds text-secondary',
+        '09d': 'fas fa-cloud-rain text-primary',
+        '09n': 'fas fa-cloud-rain text-primary',
+        '10d': 'fas fa-cloud-sun-rain text-primary',
+        '10n': 'fas fa-cloud-moon-rain text-primary',
+        '11d': 'fas fa-bolt text-warning',
+        '11n': 'fas fa-bolt text-warning',
+        '13d': 'fas fa-snowflake text-info',
+        '13n': 'fas fa-snowflake text-info',
+        '50d': 'fas fa-smog text-secondary',
+        '50n': 'fas fa-smog text-secondary'
+    };
+    return iconMap[iconCode] || 'fas fa-cloud text-info';
+}
+
+async function loadWeatherAlerts() {
+    try {
+        const response = await fetch('/api/safety/weather/alerts/');
+        const data = await response.json();
+        
+        if (data.success) {
+            updateWeatherAlerts(data.data);
+        }
+    } catch (error) {
+        console.error('Error loading weather alerts:', error);
+        // Show demo alerts if API fails
+        updateWeatherAlerts([
+            {
+                event: 'Heavy Rain',
+                description: 'Heavy rainfall expected in Kolkata and surrounding areas',
+                severity: 'moderate'
+            }
+        ]);
+    }
+}
+
+function updateWeatherAlerts(alerts) {
+    const container = document.getElementById('weatherAlerts');
+    
+    if (alerts.length === 0) {
+        container.innerHTML = '<p class="text-muted text-center">No weather alerts at this time.</p>';
+        return;
+    }
+    
+    let html = '';
+    alerts.forEach(alert => {
+        const severityClass = alert.severity === 'severe' ? 'danger' : 
+                            alert.severity === 'moderate' ? 'warning' : 'info';
+        
+        html += `
+            <div class="alert alert-${severityClass} mb-2">
+                <small>
+                    <strong>${alert.event}</strong><br>
+                    ${alert.description}
+                </small>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Initialize weather data when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadWeatherData();
+    loadWeatherAlerts();
+    
+    // Update weather every 5 minutes
+    setInterval(loadWeatherData, 300000);
+    setInterval(loadWeatherAlerts, 300000);
+});
+</script>
+{% endblock %} 
